@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      background-color: #f5dcbf;
+    }
+
+    header {
+      background-color: #4caf9e;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #events-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+      flex: 1;
+    }
+
+    .events-section {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .events-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .event-viewer {
+      text-align: center;
+      background-color: #f2f2f2;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 350px;
+      box-sizing: border-box;
+      opacity: 0;
+      transform: translateX(100px);
+      animation: fadeInFromRight 0.5s forwards;
+    }
+
+    @keyframes fadeInFromRight {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .event-photo {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background-color: #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .event-photo:hover {
+      transform: scale(1.1);
+    }
+
+    .event-details {
+      padding: 16px;
+    }
+
+    .event-timing {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .event-location,
+    .event-pricing,
+    .event-theme {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .event-countdown,
+    .event-badge,
+    .event-organizer {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    .event-countdown {
+      font-weight: bold;
+    }
+
+    .event-badge {
+      background-color: #ffeb3b;
+      color: #333;
+      padding: 5px 10px;
+      border-radius: 3px;
+    }
+
+    .event-gallery,
+    .event-recap,
+    .event-feedback,
+    .event-related,
+    .event-share {
+      margin-top: 10px;
+    }
+
+    .event-gallery a,
+    .event-recap a,
+    .event-feedback a,
+    .event-related a,
+    .event-share a {
+      color: #4caf9e;
+      text-decoration: none;
+    }
+
+    .event-gallery a:hover,
+    .event-recap a:hover,
+    .event-feedback a:hover,
+    .event-related a:hover,
+    .event-share a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .event-viewer {
+        flex: 1 1 calc(50% - 20px);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .event-viewer {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Event Viewer</h1>
+  </header>
+
+  <div id="events-container">
+    <div class="events-section">
+      <h2>Upcoming Events</h2>
+      <div class="events-row" id="upcoming-events-row-1"></div>
+      <div class="events-row" id="upcoming-events-row-2"></div>
+    </div>
+
+    <div class="events-section">
+      <h2>Recent Events</h2>
+      <div class="events-row" id="recent-events-row-1"></div>
+      <div class="events-row" id="recent-events-row-2"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2024 Event Viewer. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const upcomingEvents = [
+        {
+          photoUrl: 'photo.png',
+          linkUrl: 'https://example.com/event1',
+          timing: 'August 8, 2024, 10:00 AM - 2:00 PM',
+          location: 'Kathmandu, Nepal',
+          pricing: 'Free',
+          theme: 'Music Festival',
+          features: {
+            countdown: 'Starts in: 5 days',
+            badge: 'Featured',
+            locationMap: 'https://maps.google.com',
+            organizer: 'Organizer: <a href="#">Contact</a>',
+          }
+        },
+        {
+          photoUrl: 'photo.png',
+          linkUrl: 'https://example.com/event2',
+          timing: 'August 10, 2024, 5:00 PM - 9:00 PM',
+          location: 'Lalitpur, Nepal',
+          pricing: 'Paid',
+          theme: 'Art Exhibition',
+          features: {
+            countdown: 'Starts in: 7 days',
+            badge: 'Popular',
+            locationMap: 'https://maps.google.com',
+            organizer: 'Organizer: <a href="#">Contact</a>',
+          }
+        },
+        // Add more upcoming events as needed
+      ];
+
+      const recentEvents = [
+        {
+          photoUrl: 'photo.png',
+          linkUrl: 'https://example.com/event3',
+          timing: 'August 12, 2024, 2:00 PM - 6:00 PM',
+          location: 'Bhaktapur, Nepal',
+          pricing: 'Free',
+          theme: 'Food Fair',
+          features: {
+            gallery: '<a href="#">View Photos</a>',
+            recap: '<a href="#">Read Recap</a>',
+            feedback: '<a href="#">See Reviews</a>',
+            related: '<a href="#">View More Events</a>',
+            share: '<a href="#">Share on Social Media</a>',
+          }
+        },
+        {
+          photoUrl: 'photo.png',
+          linkUrl: 'https://example.com/event4',
+          timing: 'August 15, 2024, 3:00 PM - 7:00 PM',
+          location: 'Pokhara, Nepal',
+          pricing: 'Paid',
+          theme: 'Tech Conference',
+          features: {
+            gallery: '<a href="#">View Photos</a>',
+            recap: '<a href="#">Read Recap</a>',
+            feedback: '<a href="#">See Reviews</a>',
+            related: '<a href="#">View More Events</a>',
+            share: '<a href="#">Share on Social Media</a>',
+          }
+        },
+        // Add more recent events as needed
+      ];
+
+      const renderEvents = (events, row1Id, row2Id) => {
+        const row1 = document.getElementById(row1Id);
+        const row2 = document.getElementById(row2Id);
+
+        events.forEach((event, index) => {
+          const eventViewer = document.createElement('div');
+          eventViewer.className = 'event-viewer';
+          eventViewer.innerHTML = `
+            <a href="${event.linkUrl}" target="_blank">
+              <img class="event-photo" src="${event.photoUrl}" alt="Event Photo">
+            </a>
+            <div class="event-details">
+              <div class="event-timing">${event.timing}</div>
+              <div class="event-location">Location: ${event.location}</div>
+              <div class="event-pricing">Pricing: ${event.pricing}</div>
+              <div class="event-theme">Theme: ${event.theme}</div>
+              ${event.features.countdown ? `<div class="event-countdown">${event.features.countdown}</div>` : ''}
+              ${event.features.badge ? `<div class="event-badge">${event.features.badge}</div>` : ''}
+              ${event.features.locationMap ? `<a href="${event.features.locationMap}" target="_blank">View Location</a>` : ''}
+              ${event.features.organizer ? `<div class="event-organizer">${event.features.organizer}</div>` : ''}
+                            ${event.features.gallery ? `<div class="event-features">${event.features.gallery}</div>` : ''}
+              ${event.features.recap ? `<div class="event-features">${event.features.recap}</div>` : ''}
+              ${event.features.feedback ? `<div class="event-features">${event.features.feedback}</div>` : ''}
+              ${event.features.related ? `<div class="event-features">${event.features.related}</div>` : ''}
+              ${event.features.share ? `<div class="event-features">${event.features.share}</div>` : ''}
+            </div>
+          `;
+
+          // Distribute events evenly across the two rows
+          if (index % 6 < 3) {
+            row1.appendChild(eventViewer);
+          } else {
+            row2.appendChild(eventViewer);
+          }
+        });
+      };
+
+      // Render upcoming and recent events
+      renderEvents(upcomingEvents, 'upcoming-events-row-1', 'upcoming-events-row-2');
+      renderEvents(recentEvents, 'recent-events-row-1', 'recent-events-row-2');
+    });
+  </script>
+</body>
+</html>

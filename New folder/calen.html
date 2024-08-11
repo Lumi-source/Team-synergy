@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Calendar</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .calendar-container {
+      max-width: 400px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .nav-button {
+      background-color: #4caf9e;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .nav-button:hover {
+      background-color: #45a088;
+    }
+
+    .month-year {
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 2px;
+    }
+
+    .calendar-day {
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #f5f5f5;
+    }
+
+    .empty-day {
+      background-color: #f5f5f5;
+    }
+
+    .calendar-date {
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #ddd;
+      position: relative;
+    }
+
+    .event-title {
+      font-size: 0.8em;
+      color: #4caf9e;
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="calendar-container">
+    <div class="calendar-header">
+      <button id="prev-month" class="nav-button">Prev</button>
+      <h2 id="month-year" class="month-year"></h2>
+      <button id="next-month" class="nav-button">Next</button>
+    </div>
+    <div class="calendar-grid">
+      <!-- Days of the week -->
+      <div class="calendar-day">Sun</div>
+      <div class="calendar-day">Mon</div>
+      <div class="calendar-day">Tue</div>
+      <div class="calendar-day">Wed</div>
+      <div class="calendar-day">Thu</div>
+      <div class="calendar-day">Fri</div>
+      <div class="calendar-day">Sat</div>
+      <!-- Empty and day cells will be added dynamically -->
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const calendarContainer = document.querySelector('.calendar-grid');
+      const monthYearElement = document.getElementById('month-year');
+      const prevMonthButton = document.getElementById('prev-month');
+      const nextMonthButton = document.getElementById('next-month');
+
+      let date = new Date();
+      let month = date.getMonth();
+      let year = date.getFullYear();
+
+      // Sample event data
+      const events = {
+        '2024-08-15': 'Festival',
+        '2024-08-25': 'Local Shop Opening'
+      };
+
+      const renderCalendar = () => {
+        calendarContainer.innerHTML = '';
+        
+        // Render days of the week
+        daysOfWeek.forEach(day => {
+          const dayElement = document.createElement('div');
+          dayElement.className = 'calendar-day';
+          dayElement.textContent = day;
+          calendarContainer.appendChild(dayElement);
+        });
+
+        // Render empty days
+        const firstDay = new Date(year, month, 1).getDay();
+        for (let i = 0; i < firstDay; i++) {
+          const emptyDayElement = document.createElement('div');
+          emptyDayElement.className = 'empty-day';
+          calendarContainer.appendChild(emptyDayElement);
+        }
+
+        // Render days of the month
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        for (let i = 1; i <= daysInMonth; i++) {
+          const dateElement = document.createElement('div');
+          dateElement.className = 'calendar-date';
+          dateElement.textContent = i;
+          
+          const eventDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+          if (events[eventDate]) {
+            const eventElement = document.createElement('div');
+            eventElement.className = 'event-title';
+            eventElement.textContent = events[eventDate];
+            dateElement.appendChild(eventElement);
+          }
+
+          calendarContainer.appendChild(dateElement);
+        }
+
+        // Update month and year display
+        monthYearElement.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
+      };
+
+      const handleNextMonth = () => {
+        if (month === 11) {
+          month = 0;
+          year++;
+        } else {
+          month++;
+        }
+        date = new Date(year, month);
+        renderCalendar();
+      };
+
+      const handlePrevMonth = () => {
+        if (month === 0) {
+          month = 11;
+          year--;
+        } else {
+          month--;
+        }
+        date = new Date(year, month);
+        renderCalendar();
+      };
+
+      prevMonthButton.addEventListener('click', handlePrevMonth);
+      nextMonthButton.addEventListener('click', handleNextMonth);
+
+      // Initial render
+      renderCalendar();
+    });
+  </script>
+</body>
+</html>
